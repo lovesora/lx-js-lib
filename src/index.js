@@ -1,3 +1,8 @@
 import API from './api/api';
+import {descartes} from './algorithm/descartes';
 
-export {API};
+let Algorithm = {
+    descartes,
+}
+
+export {API, Algorithm};

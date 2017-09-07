@@ -3,7 +3,7 @@ js库
 
 * API
 ```js
-let api = new API().api('get', '/root/path').apis();
+let api = new API().api('get', '/root/path');
 // {
 //     host: 'http://localhost',
 //     getRootPath: {
@@ -12,9 +12,9 @@ let api = new API().api('get', '/root/path').apis();
 //         absUrl: 'http://localhost/root/path'
 //     }
 // }
-console.log(api);
+console.log(api.apis());
 
-api.api('post', '/root/path/', '/root/path/post').apis();
+api.api('post', '/root/path/', '/root/path/post');
 // {
 //     host: 'http://localhost',
 //     getRootPath: {
@@ -28,5 +28,24 @@ api.api('post', '/root/path/', '/root/path/post').apis();
 //         absUrl: 'http://localhost/root/path/post'
 //     }
 // }
-console.log(api);
+console.log(api.apis());
+```
+
+* Algorithm
+```js
+// descartes
+let descartesResult = Algorithm.descartes({
+    a: [
+        'a1',
+        'a2',
+        'a3',
+    ],
+    b: [
+        'b1',
+        'b2',
+    ]
+})
+
+// [ [ 'a1', 'b1' ], [ 'a1', 'b2' ], [ 'a2', 'b1' ], [ 'a2', 'b2' ], [ 'a3', 'b1' ], [ 'a3', 'b2' ] ]
+console.log(descartesResult);
 ```
