@@ -16,7 +16,9 @@ let config = {
     },
     output: {
         path: paths.output.path,
-        filename: '[name].js'
+        filename: '[name].js',
+        library: 'lxJsLib',
+        libraryTarget: 'umd'
     },
     module: {
         rules: [{

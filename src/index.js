@@ -5,6 +5,6 @@ import Compat from './compatibility/detect-browser';
 
 let Algorithm = {
     descartes,
-}
+};
 
 export {API, Algorithm, Compat, $};

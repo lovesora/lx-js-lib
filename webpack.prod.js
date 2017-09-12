@@ -18,7 +18,9 @@ let config = {
     },
     output: {
         path: paths.output.path,
-        filename: '[name].min.js'
+        filename: '[name].min.js',
+        library: 'lxJsLib',
+        libraryTarget: 'umd'
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
