@@ -19,6 +19,7 @@ let config = {
     output: {
         path: paths.output.path,
         filename: '[name].min.js',
+        // 将项目作为库
         library: 'lxJsLib',
         libraryTarget: 'umd'
     },

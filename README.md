@@ -1,5 +1,26 @@
 # lx-js-lib
-js库
+This project is the common js operation library.
+
+## cli command
+
+`yarn start`
+
+## module import
+you can import independent class with using es6
+```js
+// amd
+define(['lx-js-lib'], function(lxJsLib){});
+```
+
+```js
+// cmd
+let lxJsLib = require('lx-js-lib');
+```
+
+```js
+// es6
+import {API} from 'lx-js-lib';
+```
 
 * API
 ```js
@@ -14,7 +35,7 @@ let api = new API().api('get', '/root/path');
 // }
 console.log(api.apis());
 
-api.api('post', '/root/path/', '/root/path/post');
+api.api('put', '/root/path/', '/root/path/:id');
 // {
 //     host: 'http://localhost',
 //     getRootPath: {
@@ -22,13 +43,27 @@ api.api('post', '/root/path/', '/root/path/post');
 //         url: '/root/path',
 //         absUrl: 'http://localhost/root/path'
 //     },
-//     postRootPath: {
-//         method: 'post',
-//         url: '/root/path/post',
-//         absUrl: 'http://localhost/root/path/post'
+//     putRootPath: {
+//         method: 'put',
+//         url: '/root/path/:id',
+//         absUrl: 'http://localhost/root/path/:id',
+//         insertRestParams: function...
 //     }
 // }
 console.log(api.apis());
+
+let putRootPath = api.apis().putRootPath;
+putRootPath.insertRestParams({id: 10});
+
+// {
+//     method: 'put',
+//     url: '/root/path/:id',
+//     absUrl: 'http://localhost/root/path/:id'
+//     restUrl: '/root/path/10',
+//     restAbsUrl: 'http://localhost/root/path/10'
+//     insertRestParams: function...
+// }
+console.log(putRootPath);
 ```
 
 * Algorithm
