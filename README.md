@@ -49,3 +49,27 @@ let descartesResult = Algorithm.descartes({
 // [ [ 'a1', 'b1' ], [ 'a1', 'b2' ], [ 'a2', 'b1' ], [ 'a2', 'b2' ], [ 'a3', 'b1' ], [ 'a3', 'b2' ] ]
 console.log(descartesResult);
 ```
+
+* $
+```js
+let nav = document.querySelector('body');
+$.addClass(nav, 'red');
+console.log(nav.className);// red
+console.log($.hasClass(nav, 'red'));// true
+$.removeClass(nav, 'red');
+console.log(nav.className);// ''
+console.log($.hasClass(nav, 'red'));// false
+$.toggleClass(nav, 'red');
+console.log(nav.className);// red
+$.toggleClass(nav, 'red');
+console.log(nav.className);// ''
+```
+
+* Compat
+```js
+import {Compat} from 'lx-js-lib';
+Compat.css.isAbleAnimate()// true or false
+Compat.css.isAbleByStyleName('animation')// true or false
+Compat.browser.getWechatVersion()// 6.5
+Compat.browser.getType()// one of ['IE', 'IE7', 'IE8', 'IE9', 'IE10', 'IE11', 'FF', 'Opera', 'Safari', 'Chorome', 'Edge', 'Unknown']
+```

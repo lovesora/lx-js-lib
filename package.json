@@ -4,6 +4,9 @@
   "description": "js lib",
   "main": "src/index.js",
   "scripts": {
+    "start": "npm run start:dev && npm run start:prod",
+    "start:dev": "webpack --env=dev --progress --profile --colors",
+    "start:prod": "webpack --env=prod --progress --profile --colors",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,5 +21,19 @@
   "bugs": {
     "url": "https://github.com/lovesora/lx-js-lib/issues"
   },
-  "homepage": "https://github.com/lovesora/lx-js-lib#readme"
+  "homepage": "https://github.com/lovesora/lx-js-lib#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "eslint": "^4.6.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-react": "^7.3.0",
+    "path": "^0.12.7",
+    "webpack": "^3.5.6"
+  }
 }
