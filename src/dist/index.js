@@ -331,13 +331,19 @@ Compat.css = {
 
     /** 
      * 判断浏览器是否支持某一个CSS3属性 
-     * @param   {String} 属性名称 
+     * @param   {String||array} 属性名称 
      * @return  {Boolean} true/false 
      * @version 1.0 
      * @author  liuxin 
      * 2017-09-11 19:24:47
      */
     isAbleByStyleName: function isAbleByStyleName(style) {
+        if (Object.prototype.toString.call(style) === '[object Array]') {
+            return style.filter(function (s) {
+                return Compat.css.isAbleByStyleName(s);
+            }).length === style.length;
+        }
+
         var prefix = ['webkit', 'Moz', 'ms', 'o'],
             jsStyle = [style],
             htmlStyle = document.documentElement.style;
