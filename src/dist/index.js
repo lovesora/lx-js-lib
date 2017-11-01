@@ -90,7 +90,7 @@ module.exports = __webpack_require__(1);
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.$ = exports.Compat = exports.Algorithm = exports.API = undefined;
+exports.Param = exports.$ = exports.Compat = exports.Algorithm = exports.API = undefined;
 
 var _api = __webpack_require__(2);
 
@@ -106,6 +106,10 @@ var _detectBrowser = __webpack_require__(5);
 
 var _detectBrowser2 = _interopRequireDefault(_detectBrowser);
 
+var _param = __webpack_require__(6);
+
+var _param2 = _interopRequireDefault(_param);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Algorithm = {
@@ -116,6 +120,7 @@ exports.API = _api2.default;
 exports.Algorithm = Algorithm;
 exports.Compat = _detectBrowser2.default;
 exports.$ = _classOpt2.default;
+exports.Param = _param2.default;
 
 /***/ }),
 /* 2 */
@@ -134,7 +139,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var API = function () {
     function API() {
-        var host = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : typeof location !== "undefined" && location.origin || '';
+        var host = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : typeof location !== 'undefined' && location.origin || '';
 
         _classCallCheck(this, API);
 
@@ -149,7 +154,7 @@ var API = function () {
             var urlFormat = method.toLowerCase() + url.split(/\//).filter(function (v) {
                 return !!v;
             }).map(function (v) {
-                return v.replace(/^(\w)/, function (v) {
+                return v.match(/\w+/)[0].replace(/^(\w)/, function (v) {
                     return v.toUpperCase();
                 });
             }).join('');
@@ -158,7 +163,11 @@ var API = function () {
             this.data[urlFormat] = {
                 method: method,
                 url: url,
-                absUrl: absUrl
+                absUrl: absUrl,
+                insertRestParams: function insertRestParams(params) {
+                    API.insertRestParams.call(this, params);
+                    return this;
+                }
             };
             return this;
         }
@@ -166,6 +175,18 @@ var API = function () {
         key: 'apis',
         value: function apis() {
             return this.data;
+        }
+    }], [{
+        key: 'insertRestParams',
+        value: function insertRestParams(params) {
+            var restUrl = this.url;
+            var restAbsUrl = this.absUrl;
+            for (var key in params) {
+                restUrl = restUrl.replace(':' + key, params[key]);
+                restAbsUrl = restAbsUrl.replace(':' + key, params[key]);
+            }
+            this.restUrl = restUrl;
+            this.restAbsUrl = restAbsUrl;
         }
     }]);
 
@@ -427,6 +448,63 @@ Compat.browser = {
     }
 };
 exports.default = Compat;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Param = function () {
+    function Param() {
+        _classCallCheck(this, Param);
+    }
+
+    _createClass(Param, [{
+        key: 'getParams',
+
+        /**
+         * @param ?a=1&b=2&a=3&c=3
+         * @return {a: [1, 3], b: 2, c: 3}
+         */
+        value: function getParams() {
+            var _location = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : location;
+
+            var hash = _location.hash ? _location.hash.split('?') : _location.split('?');
+            var params = hash[hash.length - 1];
+            params = params.split('&');
+
+            var result = {};
+            params.map(function (v) {
+                var _param = v.split('=');
+
+                if (result[_param[0]]) {
+                    if (Object.prototype.toString.call(result[_param[0]]) === '[object Array]') {
+                        result[_param[0]] = result[_param[0]].push(_param[1]);
+                    } else {
+                        result[_param[0]] = [result[_param[0]], _param[1]];
+                    }
+                } else {
+                    result[_param[0]] = _param[1];
+                }
+            });
+            return result;
+        }
+    }]);
+
+    return Param;
+}();
+
+exports.default = Param;
 
 /***/ })
 /******/ ]);

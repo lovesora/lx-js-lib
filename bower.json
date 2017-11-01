@@ -1,0 +1,20 @@
+{
+  "name": "lx-js-lib",
+  "description": "js lib",
+  "main": "src/dist/index.min.js",
+  "authors": [
+    "liuxin"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "js"
+  ],
+  "homepage": "https://github.com/lovesora/lx-js-lib",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
