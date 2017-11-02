@@ -4,7 +4,7 @@
  * 
  * @param {Object} list 
  */
-export function descartes(list) {
+export default function descartes(list) {
     //parent上一级索引;count指针计数  
     var point = {};
     var result = [];
