@@ -278,9 +278,6 @@ function descartes(list) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 exports.search = search;
 
 var _lodash = __webpack_require__(5);
@@ -290,51 +287,72 @@ var _lodash2 = _interopRequireDefault(_lodash);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function search(data, filterRules) {
-    var _data = this;
+    var _data = data;
 
     var _defaultCols = [];
-    (0, _lodash2.default)(data[0], function (v, k) {
+    (0, _lodash2.default)(_data[0], function (v, k) {
         _defaultCols.push(k);
     });
 
+    /**
+     * @param row 行数据
+     * @param cols 列名数组
+     * @param filterValue 需要过滤的值 string | string[]
+     */
     var _filter = function _filter(row, cols, filterValue) {
         return cols.filter(function (colName) {
             if (filterValue === undefined || filterValue === null) filterValue = '';
+            return String(row[colName]).toLowerCase().indexOf(String(filterValue).toLowerCase()) > -1;
+        }).length;
+    };
+    var _filterAnd = function _filterAnd(row, cols, filterValue) {
+        return cols.filter(function (colName) {
+            if (filterValue === undefined || filterValue === null) filterValue = '';
             // 或规则，有一个匹配成功就返回true
-            if ((typeof filterValue === 'undefined' ? 'undefined' : _typeof(filterValue)) === 'object') {
+            if (Object.prototype.toString.call(filterValue) === '[object Array]') {
                 return filterValue.filter(function (filterItem) {
                     return String(row[colName]).toLowerCase().indexOf(String(filterItem).toLowerCase()) > -1;
-                }).length > 0;
+                }).length === filterValue.length;
             }
             return String(row[colName]).toLowerCase().indexOf(String(filterValue).toLowerCase()) > -1;
         }).length;
     };
-    var _orFilter = function _orFilter(data, filterRule) {
+    var _orFilter = function _orFilter(data, rule) {
         return data.filter(function (v) {
-            return _filter(v, filterRule.cols || _defaultCols, filterRule.value) > 0;
+            if (Object.prototype.toString.call(rule.value) === '[object Array]') {
+                var value = rule.value;
+                var result = value.filter(function (_value) {
+                    return _filter(v, rule.cols || _defaultCols, _value) > 0;
+                }).length === value.length;
+                return result;
+            } else {
+                return _filter(v, rule.cols || _defaultCols, rule.value) > 0;
+            }
         });
     };
-    var _andFilter = function _andFilter(data, filterRule) {
+    var _andFilter = function _andFilter(data, rule) {
         return data.filter(function (v) {
-            return _filter(v, filterRule.cols || _defaultCols, filterRule.value) === filterRule.cols.length;
+            return _filterAnd(v, rule.cols || _defaultCols, rule.value) === rule.cols.length;
         });
     };
-    (0, _lodash2.default)(filterRules, function (rule) {
-        switch (rule.type) {
-            case '&':
+
+    (0, _lodash2.default)(filterOption, function (option) {
+        switch (option.type) {
+            case SearchType.AND:
                 {
-                    _data = _andFilter(_data, rule.rule);
+                    _data = _andFilter(_data, option.rule);
                     break;
                 }
-            case '|':
+            case SearchType.OR:
                 {
-                    _data = _orFilter(_data, rule.rule);
+                    _data = _orFilter(_data, option.rule);
                     break;
                 }
         }
     });
+
     return _data;
-};
+}
 
 /***/ }),
 /* 5 */

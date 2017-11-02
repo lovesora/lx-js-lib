@@ -1,45 +1,69 @@
 import _forEach from 'lodash.foreach';
 
 export function search(data, filterRules) {
-    let _data = this;
+    let _data = data;
 
     let _defaultCols = [];
-    _forEach(data[0], (v, k) => {
+    _forEach(_data[0], (v, k) => {
         _defaultCols.push(k);
     });
 
+    /**
+     * @param row 行数据
+     * @param cols 列名数组
+     * @param filterValue 需要过滤的值 string | string[]
+     */
     let _filter = function (row, cols, filterValue) {
         return cols.filter(colName => {
             if (filterValue === undefined || filterValue === null)
                 filterValue = '';
+            return String(row[colName]).toLowerCase().indexOf(String(filterValue).toLowerCase()) > -1;
+        }).length;
+    };
+    let _filterAnd = function (row, cols, filterValue) {
+        return cols.filter(colName => {
+            if (filterValue === undefined || filterValue === null)
+                filterValue = '';
             // 或规则，有一个匹配成功就返回true
-            if (typeof filterValue === 'object') {
+            if (Object.prototype.toString.call(filterValue) === '[object Array]') {
                 return filterValue.filter(filterItem => {
                     return String(row[colName]).toLowerCase().indexOf(String(filterItem).toLowerCase()) > -1;
-                }).length > 0;
+                }).length === filterValue.length;
             }
             return String(row[colName]).toLowerCase().indexOf(String(filterValue).toLowerCase()) > -1;
         }).length;
     };
-    let _orFilter = function (data, filterRule) {
-        return data.filter(v => _filter(v, filterRule.cols || _defaultCols, filterRule.value) > 0);
+    let _orFilter = function (data, rule) {
+        return data.filter(v => {
+            if (Object.prototype.toString.call(rule.value) === '[object Array]') {
+                let value = rule.value;
+                let result = value.filter(_value => {
+                    return _filter(v, rule.cols || _defaultCols, _value) > 0
+                }).length === value.length;
+                return result;
+            } else {
+                return _filter(v, rule.cols || _defaultCols, rule.value) > 0
+            }
+        });
     };
-    let _andFilter = function (data, filterRule) {
-        return data.filter(v => _filter(v, filterRule.cols || _defaultCols, filterRule.value) === filterRule.cols.length);
+    let _andFilter = function (data, rule) {
+        return data.filter(v => _filterAnd(v, rule.cols || _defaultCols, rule.value) === rule.cols.length);
     };
-    _forEach(filterRules, rule => {
-        switch (rule.type) {
-            case '&':
+
+    _forEach(filterOption, (option) => {
+        switch (option.type) {
+            case SearchType.AND:
                 {
-                    _data = _andFilter(_data, rule.rule);
+                    _data = _andFilter(_data, option.rule);
                     break;
                 }
-            case '|':
+            case SearchType.OR:
                 {
-                    _data = _orFilter(_data, rule.rule);
+                    _data = _orFilter(_data, option.rule);
                     break;
                 }
         }
     });
+
     return _data;
-};
+}
