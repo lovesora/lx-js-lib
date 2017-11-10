@@ -1,6 +1,11 @@
 import _forEach from 'lodash.foreach';
 
 export function search(data, filterRules) {
+    let SearchType = {
+        AND: '&',
+        OR: '|',
+    }
+    
     let _data = data;
 
     let _defaultCols = [];
