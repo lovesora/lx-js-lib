@@ -12,9 +12,11 @@ export function search(data, filterValue) {
     let _data = data;
 
     let _defaultCols = [];
-    _forEach(_data[0], (v, k) => {
-        _defaultCols.push(k);
-    });
+    if (_data.length) {
+        _forEach(_data[0], (v, k) => {
+            _defaultCols.push(k);
+        });
+    }
 
     /**
      * @param row 行数据
