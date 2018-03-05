@@ -75,6 +75,11 @@ export function search(data, filterValue) {
                     _data = _orFilter(_data, option.rule);
                     break;
                 }
+            default: 
+                {
+                    _data = _orFilter(_data, option.rule);
+                    break;
+                }
         }
     });
 
